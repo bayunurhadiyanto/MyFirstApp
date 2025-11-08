@@ -5,6 +5,9 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
+import androidx.viewpager2.widget.ViewPager2
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -35,6 +38,29 @@ class DashboardFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_dashboard, container, false)
+    }
+
+    // Bagian baru yang dbutuhkan:
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        // 1. Inisialisasi komponen dari fragment_dashboard.xml
+        val tabLayout = view.findViewById<TabLayout>(R.id.tab_layout)
+        val viewPager = view.findViewById<ViewPager2>(R.id.view_pager)
+
+        // 2. Setup Adapter
+        val tabTitles = listOf("Berita", "Pengumuman")
+
+        // Pasang adapter TabPagerAdapter (yang sudah dibuat sebelumnya) ke ViewPager2
+        // 'this' di sini merujuk pada DashboardFragment, yang menjadi host adapter.
+        viewPager.adapter = TabPagerAdapter(this)
+
+        // 3. Hubungkan TabLayout dengan ViewPager2 menggunakan TabLayoutMediator
+        // Ini memastikan saat ViewPager2 bergeser, TabLayout ikut berubah, dan sebaliknya.
+        TabLayoutMediator(tabLayout, viewPager) { tab, position ->
+            // Atur teks tab berdasarkan daftar judul
+            tab.text = tabTitles[position]
+        }.attach() // HARUS dipanggil agar koneksi ini berfungsi!
     }
 
     companion object {
